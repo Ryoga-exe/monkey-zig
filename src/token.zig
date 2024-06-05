@@ -32,8 +32,13 @@ const TokenType = enum {
     rbrace,
 
     // Keywords
-    function,
-    let,
+    keyword_function,
+    keyword_let,
+    keyword_true,
+    keyword_false,
+    keyword_if,
+    keyword_else,
+    keyword_return,
 };
 
 pub fn init(token_type: TokenType, literal: []const u8) Token {
@@ -45,8 +50,13 @@ pub fn init(token_type: TokenType, literal: []const u8) Token {
 
 pub fn lookupIdentifier(identifier: []const u8) TokenType {
     const map = std.ComptimeStringMap(TokenType, .{
-        .{ "fn", .function },
-        .{ "let", .let },
+        .{ "fn", .keyword_function },
+        .{ "let", .keyword_let },
+        .{ "true", .keyword_true },
+        .{ "false", .keyword_false },
+        .{ "if", .keyword_if },
+        .{ "else", .keyword_else },
+        .{ "return", .keyword_return },
     });
     if (map.get(identifier)) |key| {
         return key;

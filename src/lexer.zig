@@ -111,24 +111,30 @@ test Lexer {
         \\
         \\!-/*5;
         \\5 < 10 > 5;
+        \\
+        \\if (5 < 10) {
+        \\    return true;
+        \\} else {
+        \\    return false;
+        \\}
     ;
 
     const tests = [_]Token{
-        Token.init(.let, "let"),
+        Token.init(.keyword_let, "let"),
         Token.init(.identifier, "five"),
         Token.init(.assign, "="),
         Token.init(.integer, "5"),
         Token.init(.semicolon, ";"),
-        Token.init(.let, "let"),
+        Token.init(.keyword_let, "let"),
         Token.init(.identifier, "ten"),
         Token.init(.assign, "="),
         Token.init(.integer, "10"),
         Token.init(.semicolon, ";"),
 
-        Token.init(.let, "let"),
+        Token.init(.keyword_let, "let"),
         Token.init(.identifier, "add"),
         Token.init(.assign, "="),
-        Token.init(.function, "fn"),
+        Token.init(.keyword_function, "fn"),
         Token.init(.lparen, "("),
         Token.init(.identifier, "x"),
         Token.init(.comma, ","),
@@ -142,7 +148,7 @@ test Lexer {
         Token.init(.rbrace, "}"),
         Token.init(.semicolon, ";"),
 
-        Token.init(.let, "let"),
+        Token.init(.keyword_let, "let"),
         Token.init(.identifier, "result"),
         Token.init(.assign, "="),
         Token.init(.identifier, "add"),
@@ -165,6 +171,24 @@ test Lexer {
         Token.init(.gt, ">"),
         Token.init(.integer, "5"),
         Token.init(.semicolon, ";"),
+
+        Token.init(.keyword_if, "if"),
+        Token.init(.lparen, "("),
+        Token.init(.integer, "5"),
+        Token.init(.lt, "<"),
+        Token.init(.integer, "10"),
+        Token.init(.rparen, ")"),
+        Token.init(.lbrace, "{"),
+        Token.init(.keyword_return, "return"),
+        Token.init(.keyword_true, "true"),
+        Token.init(.semicolon, ";"),
+        Token.init(.rbrace, "}"),
+        Token.init(.keyword_else, "else"),
+        Token.init(.lbrace, "{"),
+        Token.init(.keyword_return, "return"),
+        Token.init(.keyword_false, "false"),
+        Token.init(.semicolon, ";"),
+        Token.init(.rbrace, "}"),
 
         Token.init(.eof, ""),
     };
