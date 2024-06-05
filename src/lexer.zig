@@ -31,7 +31,14 @@ pub fn nextToken(self: *Lexer) Token {
         '{' => token = Token.init(.lbrace, "{"),
         '}' => token = Token.init(.rbrace, "}"),
         0 => token = Token.init(.eof, ""),
-        else => token = Token.init(.illegal, ""),
+        else => {
+            if (isLetter(self.ch)) {
+                token.literal = self.readIdentifier();
+                token.token_type = Token.lookupIdentifier(token.literal);
+            } else {
+                token = Token.init(.illegal, "");
+            }
+        },
     }
     self.readChar();
 
@@ -48,10 +55,22 @@ fn readChar(self: *Lexer) void {
     self.read_position += 1;
 }
 
+fn readIdentifier(self: *Lexer) []const u8 {
+    const position = self.position;
+    while (isLetter(self.ch)) {
+        self.readChar();
+    }
+    return self.input[position..self.position];
+}
+
 fn skipWhitespace(self: *Lexer) void {
     while (std.ascii.isWhitespace(self.ch)) {
         self.readChar();
     }
+}
+
+fn isLetter(ch: u8) bool {
+    return std.ascii.isAlphabetic(ch) or ch == '_';
 }
 
 test Lexer {
@@ -68,41 +87,41 @@ test Lexer {
 
     const tests = [_]Token{
         Token.init(.let, "let"),
-        Token.init(.ident, "five"),
+        Token.init(.identifier, "five"),
         Token.init(.assign, "="),
-        Token.init(.int, "5"),
+        Token.init(.integer, "5"),
         Token.init(.semicolon, ";"),
         Token.init(.let, "let"),
-        Token.init(.ident, "ten"),
+        Token.init(.identifier, "ten"),
         Token.init(.assign, "="),
-        Token.init(.int, "10"),
+        Token.init(.integer, "10"),
         Token.init(.semicolon, ";"),
 
         Token.init(.let, "let"),
-        Token.init(.ident, "add"),
+        Token.init(.identifier, "add"),
         Token.init(.assign, "="),
         Token.init(.function, "fn"),
         Token.init(.lparen, "("),
-        Token.init(.ident, "x"),
+        Token.init(.identifier, "x"),
         Token.init(.comma, ","),
-        Token.init(.ident, "y"),
+        Token.init(.identifier, "y"),
         Token.init(.rparen, ")"),
         Token.init(.lbrace, "{"),
-        Token.init(.ident, "x"),
+        Token.init(.identifier, "x"),
         Token.init(.plus, "+"),
-        Token.init(.ident, "y"),
+        Token.init(.identifier, "y"),
         Token.init(.semicolon, ";"),
         Token.init(.rbrace, "}"),
         Token.init(.semicolon, ";"),
 
         Token.init(.let, "let"),
-        Token.init(.ident, "result"),
+        Token.init(.identifier, "result"),
         Token.init(.assign, "="),
-        Token.init(.ident, "add"),
+        Token.init(.identifier, "add"),
         Token.init(.lparen, "("),
-        Token.init(.ident, "five"),
+        Token.init(.identifier, "five"),
         Token.init(.comma, ","),
-        Token.init(.ident, "ten"),
+        Token.init(.identifier, "ten"),
         Token.init(.rparen, ")"),
         Token.init(.semicolon, ";"),
     };
