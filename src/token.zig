@@ -21,6 +21,8 @@ const TokenType = enum {
     slash,
     lt,
     gt,
+    eq,
+    not_eq,
 
     // Delimiter
     comma,

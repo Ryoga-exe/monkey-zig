@@ -24,10 +24,24 @@ pub fn nextToken(self: *Lexer) Token {
     self.skipWhitespace();
 
     switch (self.ch) {
-        '=' => token = Token.init(.assign, "="),
+        '=' => {
+            if (self.peekChar() == '=') {
+                self.readChar();
+                token = Token.init(.eq, "==");
+            } else {
+                token = Token.init(.assign, "=");
+            }
+        },
+        '!' => {
+            if (self.peekChar() == '=') {
+                self.readChar();
+                token = Token.init(.not_eq, "!=");
+            } else {
+                token = Token.init(.bang, "!");
+            }
+        },
         '+' => token = Token.init(.plus, "+"),
         '-' => token = Token.init(.minus, "-"),
-        '!' => token = Token.init(.bang, "!"),
         '/' => token = Token.init(.slash, "/"),
         '*' => token = Token.init(.asterisk, "*"),
         '<' => token = Token.init(.lt, "<"),
@@ -66,6 +80,14 @@ fn readChar(self: *Lexer) void {
     }
     self.position = self.read_position;
     self.read_position += 1;
+}
+
+fn peekChar(self: *Lexer) u8 {
+    if (self.read_position < self.input.len) {
+        return self.input[self.read_position];
+    } else {
+        return 0;
+    }
 }
 
 fn readIdentifier(self: *Lexer) []const u8 {
@@ -117,6 +139,9 @@ test Lexer {
         \\} else {
         \\    return false;
         \\}
+        \\
+        \\10 == 10;
+        \\10 != 9;
     ;
 
     const tests = [_]Token{
@@ -189,6 +214,15 @@ test Lexer {
         Token.init(.keyword_false, "false"),
         Token.init(.semicolon, ";"),
         Token.init(.rbrace, "}"),
+
+        Token.init(.integer, "10"),
+        Token.init(.eq, "=="),
+        Token.init(.integer, "10"),
+        Token.init(.semicolon, ";"),
+        Token.init(.integer, "10"),
+        Token.init(.not_eq, "!="),
+        Token.init(.integer, "9"),
+        Token.init(.semicolon, ";"),
 
         Token.init(.eof, ""),
     };
