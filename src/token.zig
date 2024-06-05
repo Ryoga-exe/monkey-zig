@@ -15,6 +15,12 @@ const TokenType = enum {
     // Operator
     assign,
     plus,
+    minus,
+    bang,
+    asterisk,
+    slash,
+    lt,
+    gt,
 
     // Delimiter
     comma,

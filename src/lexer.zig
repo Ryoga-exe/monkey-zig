@@ -25,11 +25,17 @@ pub fn nextToken(self: *Lexer) Token {
 
     switch (self.ch) {
         '=' => token = Token.init(.assign, "="),
+        '+' => token = Token.init(.plus, "+"),
+        '-' => token = Token.init(.minus, "-"),
+        '!' => token = Token.init(.bang, "!"),
+        '/' => token = Token.init(.slash, "/"),
+        '*' => token = Token.init(.asterisk, "*"),
+        '<' => token = Token.init(.lt, "<"),
+        '>' => token = Token.init(.gt, ">"),
         ';' => token = Token.init(.semicolon, ";"),
         '(' => token = Token.init(.lparen, "("),
         ')' => token = Token.init(.rparen, ")"),
         ',' => token = Token.init(.comma, ","),
-        '+' => token = Token.init(.plus, "+"),
         '{' => token = Token.init(.lbrace, "{"),
         '}' => token = Token.init(.rbrace, "}"),
         0 => token = Token.init(.eof, ""),
@@ -102,6 +108,9 @@ test Lexer {
         \\};
         \\
         \\let result = add(five, ten);
+        \\
+        \\!-/*5;
+        \\5 < 10 > 5;
     ;
 
     const tests = [_]Token{
@@ -143,6 +152,21 @@ test Lexer {
         Token.init(.identifier, "ten"),
         Token.init(.rparen, ")"),
         Token.init(.semicolon, ";"),
+
+        Token.init(.bang, "!"),
+        Token.init(.minus, "-"),
+        Token.init(.slash, "/"),
+        Token.init(.asterisk, "*"),
+        Token.init(.integer, "5"),
+        Token.init(.semicolon, ";"),
+        Token.init(.integer, "5"),
+        Token.init(.lt, "<"),
+        Token.init(.integer, "10"),
+        Token.init(.gt, ">"),
+        Token.init(.integer, "5"),
+        Token.init(.semicolon, ";"),
+
+        Token.init(.eof, ""),
     };
     var lexer = init(input);
 
