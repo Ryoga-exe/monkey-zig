@@ -1,3 +1,5 @@
+const Token = @This();
+
 token_type: TokenType,
 literal: []const u8,
 
@@ -26,3 +28,10 @@ const TokenType = enum {
     function,
     let,
 };
+
+pub fn init(token_type: TokenType, literal: []const u8) Token {
+    return Token{
+        .token_type = token_type,
+        .literal = literal,
+    };
+}
