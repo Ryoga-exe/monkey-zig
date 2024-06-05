@@ -37,6 +37,11 @@ pub fn nextToken(self: *Lexer) Token {
             if (isLetter(self.ch)) {
                 token.literal = self.readIdentifier();
                 token.token_type = Token.lookupIdentifier(token.literal);
+                return token;
+            } else if (isDigit(self.ch)) {
+                token.literal = self.readNumber();
+                token.token_type = .integer;
+                return token;
             } else {
                 token = Token.init(.illegal, "");
             }
@@ -65,6 +70,14 @@ fn readIdentifier(self: *Lexer) []const u8 {
     return self.input[position..self.position];
 }
 
+fn readNumber(self: *Lexer) []const u8 {
+    const position = self.position;
+    while (isDigit(self.ch)) {
+        self.readChar();
+    }
+    return self.input[position..self.position];
+}
+
 fn skipWhitespace(self: *Lexer) void {
     while (std.ascii.isWhitespace(self.ch)) {
         self.readChar();
@@ -73,6 +86,10 @@ fn skipWhitespace(self: *Lexer) void {
 
 fn isLetter(ch: u8) bool {
     return std.ascii.isAlphabetic(ch) or ch == '_';
+}
+
+fn isDigit(ch: u8) bool {
+    return std.ascii.isDigit(ch);
 }
 
 test Lexer {
