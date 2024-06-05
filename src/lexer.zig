@@ -21,6 +21,8 @@ pub fn init(input: []const u8) Lexer {
 pub fn nextToken(self: *Lexer) Token {
     var token = Token.init(.illegal, "");
 
+    self.skipWhitespace();
+
     switch (self.ch) {
         '=' => token = Token.init(.assign, "="),
         ';' => token = Token.init(.semicolon, ";"),
