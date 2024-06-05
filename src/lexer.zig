@@ -56,17 +56,54 @@ fn skipWhitespace(self: *Lexer) void {
 
 test Lexer {
     const input =
-        \\=+(){},;
+        \\let five = 5;
+        \\let ten = 10;
+        \\
+        \\let add = fn(x, y) {
+        \\	x + y;
+        \\};
+        \\
+        \\let result = add(five, ten);
     ;
 
     const tests = [_]Token{
+        Token.init(.let, "let"),
+        Token.init(.ident, "five"),
         Token.init(.assign, "="),
-        Token.init(.plus, "+"),
+        Token.init(.int, "5"),
+        Token.init(.semicolon, ";"),
+        Token.init(.let, "let"),
+        Token.init(.ident, "ten"),
+        Token.init(.assign, "="),
+        Token.init(.int, "10"),
+        Token.init(.semicolon, ";"),
+
+        Token.init(.let, "let"),
+        Token.init(.ident, "add"),
+        Token.init(.assign, "="),
+        Token.init(.function, "fn"),
         Token.init(.lparen, "("),
+        Token.init(.ident, "x"),
+        Token.init(.comma, ","),
+        Token.init(.ident, "y"),
         Token.init(.rparen, ")"),
         Token.init(.lbrace, "{"),
+        Token.init(.ident, "x"),
+        Token.init(.plus, "+"),
+        Token.init(.ident, "y"),
+        Token.init(.semicolon, ";"),
         Token.init(.rbrace, "}"),
+        Token.init(.semicolon, ";"),
+
+        Token.init(.let, "let"),
+        Token.init(.ident, "result"),
+        Token.init(.assign, "="),
+        Token.init(.ident, "add"),
+        Token.init(.lparen, "("),
+        Token.init(.ident, "five"),
         Token.init(.comma, ","),
+        Token.init(.ident, "ten"),
+        Token.init(.rparen, ")"),
         Token.init(.semicolon, ";"),
     };
     var lexer = init(input);
