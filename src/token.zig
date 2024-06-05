@@ -1,4 +1,4 @@
-tokenType: TokenType,
+token_type: TokenType,
 literal: []const u8,
 
 const TokenType = enum {
